@@ -138,6 +138,32 @@ app.post('/api/order', async (req, res) => {
     } else if (lookupError) {
       console.error('Customer lookup error:', lookupError);
       return res.status(500).json({ error: 'Database error' });
+    } else {
+      // Customer exists - check if information needs to be updated
+      const infoChanged = customer.name !== name || 
+                         customer.hall !== hall || 
+                         customer.room !== room;
+      
+      if (infoChanged) {
+        console.log('Customer info changed, updating...');
+        const { data: updatedCustomer, error: updateError } = await supabase
+          .from('customers')
+          .update({
+            name,
+            hall,
+            room
+          })
+          .eq('id', customer.id)
+          .select()
+          .single();
+
+        if (updateError) {
+          console.error('Customer update error:', updateError);
+          return res.status(500).json({ error: 'Failed to update customer information' });
+        }
+
+        customer = updatedCustomer;
+      }
     }
 
     // Create order
@@ -248,7 +274,7 @@ app.get('/api/admin/orders', async (req, res) => {
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    const { date, hall, customer } = req.query;
+    const { date, institution, hall, customer } = req.query;
 
     // Build query
     let query = supabase
@@ -281,6 +307,14 @@ app.get('/api/admin/orders', async (req, res) => {
     // Apply additional filters in JavaScript (since Supabase doesn't support nested filters easily)
     let filteredOrders = orders;
 
+    // Filter by institution
+    if (institution) {
+      filteredOrders = filteredOrders.filter(order => 
+        order.customers && order.customers.hall.startsWith(institution + ' -')
+      );
+    }
+
+    // Filter by hall
     if (hall) {
       filteredOrders = filteredOrders.filter(order => 
         order.customers && order.customers.hall.toLowerCase().includes(hall.toLowerCase())

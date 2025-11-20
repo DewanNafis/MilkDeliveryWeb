@@ -2,6 +2,29 @@
 const API_URL = window.location.origin;
 let autoRefreshInterval;
 
+// Hall data for different institutions
+const hallData = {
+    RU: [
+        'শহীদ সৈয়দ নজরুল ইসলাম হল',
+        'শহীদ জিয়াউর রহমান হল',
+        'মতিহার হল',
+        'শাহ মখদুম হল',
+        'সৈয়দ আমীর আলী হল',
+        'মাদার বক্স হল',
+        'কাজী নজরুল ইসলাম হল',
+        'বঙ্গমাতা হল',
+        'তাপসী রাবেয়া হল',
+        'বেগম রোকেয়া হল'
+    ],
+    RMC: [
+        'শহীদ ডা. মোহাম্মদ মোস্তফা হল',
+        'বঙ্গবন্ধু শেখ মুজিবুর রহমান হল',
+        'শহীদ ডা. শামসুদ্দিন আহমেদ হল',
+        'জননেত্রী শেখ হাসিনা হল',
+        'এমএস হল'
+    ]
+};
+
 // Log to verify script is loading
 console.log('Admin Panel JS loaded successfully');
 console.log('API URL:', API_URL);
@@ -19,6 +42,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Set up auto-refresh every 30 seconds
         startAutoRefresh();
+
+        // Setup institution filter
+        setupInstitutionFilter();
 
         // Event Listeners
         const logoutBtn = document.getElementById('logoutBtn');
@@ -153,14 +179,38 @@ async function loadStats() {
     }
 }
 
+// Setup institution filter
+function setupInstitutionFilter() {
+    const institutionFilter = document.getElementById('filterInstitution');
+    const hallFilter = document.getElementById('filterHall');
+    
+    if (institutionFilter && hallFilter) {
+        institutionFilter.addEventListener('change', () => {
+            const institution = institutionFilter.value;
+            hallFilter.innerHTML = '<option value="">All Halls</option>';
+            
+            if (institution && hallData[institution]) {
+                hallData[institution].forEach(hall => {
+                    const option = document.createElement('option');
+                    option.value = hall;
+                    option.textContent = hall;
+                    hallFilter.appendChild(option);
+                });
+            }
+        });
+    }
+}
+
 // Load orders with filters
 async function loadOrders() {
+    const institution = document.getElementById('filterInstitution').value;
     const hall = document.getElementById('filterHall').value;
     const contactNumber = document.getElementById('filterContact').value;
     const dateFrom = document.getElementById('filterDateFrom').value;
     const dateTo = document.getElementById('filterDateTo').value;
 
     const params = new URLSearchParams();
+    if (institution) params.append('institution', institution);
     if (hall) params.append('hall', hall);
     if (contactNumber) params.append('contactNumber', contactNumber);
     if (dateFrom) params.append('dateFrom', dateFrom);
@@ -277,6 +327,8 @@ function formatDate(dateString) {
 
 // Clear filters
 function clearFilters() {
+    document.getElementById('filterInstitution').value = '';
+    document.getElementById('filterHall').innerHTML = '<option value="">All Halls</option>';
     document.getElementById('filterHall').value = '';
     document.getElementById('filterContact').value = '';
     document.getElementById('filterDateFrom').value = '';

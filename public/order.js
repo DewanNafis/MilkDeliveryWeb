@@ -1,10 +1,34 @@
 // Order Page JavaScript
 const API_URL = window.location.origin;
 
+// Hall data for different institutions
+const hallData = {
+    RU: [
+        'শহীদ সৈয়দ নজরুল ইসলাম হল',
+        'শহীদ জিয়াউর রহমান হল',
+        'মতিহার হল',
+        'শাহ মখদুম হল',
+        'সৈয়দ আমীর আলী হল',
+        'মাদার বক্স হল',
+        'কাজী নজরুল ইসলাম হল',
+        'বঙ্গমাতা হল',
+        'তাপসী রাবেয়া হল',
+        'বেগম রোকেয়া হল'
+    ],
+    RMC: [
+        'শহীদ ডা. মোহাম্মদ মোস্তফা হল',
+        'বঙ্গবন্ধু শেখ মুজিবুর রহমান হল',
+        'শহীদ ডা. শামসুদ্দিন আহমেদ হল',
+        'জননেত্রী শেখ হাসিনা হল',
+        'এমএস হল'
+    ]
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     const orderForm = document.getElementById('orderForm');
     const contactNumberInput = document.getElementById('contactNumber');
     const nameInput = document.getElementById('name');
+    const institutionInput = document.getElementById('institution');
     const hallInput = document.getElementById('hall');
     const roomInput = document.getElementById('room');
     const quantityInput = document.getElementById('quantity');
@@ -16,6 +40,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const today = new Date().toISOString().split('T')[0];
     dateInput.value = today;
     dateInput.min = today;
+
+    // Handle institution selection to populate halls
+    institutionInput.addEventListener('change', () => {
+        const institution = institutionInput.value;
+        hallInput.innerHTML = '<option value="">হল নির্বাচন করুন</option>';
+        
+        if (institution && hallData[institution]) {
+            hallInput.disabled = false;
+            hallData[institution].forEach(hall => {
+                const option = document.createElement('option');
+                option.value = hall;
+                option.textContent = hall;
+                hallInput.appendChild(option);
+            });
+        } else {
+            hallInput.disabled = true;
+            hallInput.innerHTML = '<option value="">প্রথমে প্রতিষ্ঠান নির্বাচন করুন</option>';
+        }
+    });
 
     // Update total price when quantity changes
     quantityInput.addEventListener('input', () => {
@@ -36,24 +79,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (data.exists && data.customer) {
                     // Auto-fill the form
                     nameInput.value = data.customer.name;
-                    hallInput.value = data.customer.hall;
+                    
+                    // Parse institution and hall from stored hall value (format: "RU - হল নাম")
+                    const hallParts = data.customer.hall.split(' - ');
+                    if (hallParts.length === 2) {
+                        institutionInput.value = hallParts[0];
+                        // Trigger institution change to populate halls
+                        institutionInput.dispatchEvent(new Event('change'));
+                        // Set hall value after halls are populated
+                        setTimeout(() => {
+                            hallInput.value = hallParts[1];
+                        }, 50);
+                    }
+                    
                     roomInput.value = data.customer.room;
                     
-                    showMessage('Welcome back! Your information has been auto-filled.', 'success');
-                    
-                    // Make fields readonly for returning customers
-                    nameInput.setAttribute('readonly', true);
-                    hallInput.setAttribute('disabled', true);
-                    roomInput.setAttribute('readonly', true);
+                    showMessage('Welcome back! Your information has been auto-filled. You can edit any field if needed.', 'success');
                 } else {
-                    // New customer - make sure fields are editable
-                    nameInput.removeAttribute('readonly');
-                    hallInput.removeAttribute('disabled');
-                    roomInput.removeAttribute('readonly');
-                    
                     // Clear the form
                     nameInput.value = '';
+                    institutionInput.value = '';
                     hallInput.value = '';
+                    hallInput.disabled = true;
+                    hallInput.innerHTML = '<option value="">প্রথমে প্রতিষ্ঠান নির্বাচন করুন</option>';
                     roomInput.value = '';
                 }
             } catch (error) {
@@ -67,10 +115,12 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
 
         // Get form data
+        const institution = institutionInput.value;
+        const hall = hallInput.value;
         const formData = {
             contactNumber: contactNumberInput.value.trim(),
             name: nameInput.value.trim(),
-            hall: hallInput.value,
+            hall: `${institution} - ${hall}`,
             room: roomInput.value.trim(),
             quantity: parseInt(quantityInput.value),
             date: dateInput.value

@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mealky Way - আমরা দিচ্ছি রেডি টু ড্রিঙ্ক দুধ</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="hero-styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
     <!-- Navigation -->
@@ -18,7 +19,6 @@
                 <ul class="nav-links">
                     <li><a href="/" class="active">Home</a></li>
                     <li><a href="/order">Order Now</a></li>
-                    <li><a href="/admin">Admin</a></li>
                 </ul>
             </div>
         </div>
@@ -26,41 +26,86 @@
 
     <!-- Hero Section -->
     <section class="hero">
+        <div class="hero-background">
+            <div class="gradient-overlay"></div>
+            <div class="floating-shapes">
+                <div class="shape shape-1"></div>
+                <div class="shape shape-2"></div>
+                <div class="shape shape-3"></div>
+            </div>
+        </div>
         <div class="container">
             <div class="hero-content">
                 <div class="hero-text">
-                    <h1 class="hero-title">আমরা দিচ্ছি রেডি টু ড্রিঙ্ক দুধ</h1>
-                    <div class="highlight-box">
-                        <p class="hero-highlight">Room Delivery after 6 PM</p>
+                    <div class="hero-badge">
+                        <span class="badge-icon">🥛</span>
+                        <span class="badge-text">Premium Quality Milk</span>
                     </div>
-                    <div class="product-info">
-                        <div class="price-tag">
-                            <p class="size">২৫০ মি.লি.</p>
-                            <p class="price">৩০ টাকা</p>
+                    <h1 class="hero-title">
+                        <span class="title-highlight">আমরা দিচ্ছি</span>
+                        <span class="title-main">রেডি টু ড্রিঙ্ক দুধ</span>
+                    </h1>
+                    <p class="hero-subtitle">তাজা, বিশুদ্ধ এবং পুষ্টিকর দুধ প্রতিদিন আপনার দোরগোড়ায়</p>
+                    
+                    <div class="hero-features">
+                        <div class="feature-pill">
+                            <span class="pill-icon">🚪</span>
+                            <span class="pill-text">Room Delivery after 6 PM</span>
                         </div>
-                        <div class="availability">
-                            <p class="location">Every Hall in RU</p>
+                        <div class="feature-pill">
+                            <span class="pill-icon">🏢</span>
+                            <span class="pill-text">সব হলে সেবা</span>
                         </div>
                     </div>
-                    <a href="/order" class="cta-button">অর্ডার করুন</a>
+
+                    <div class="product-showcase">
+                        <div class="price-card">
+                            <div class="price-header">
+                                <span class="volume">২৫০ মি.লি.</span>
+                            </div>
+                            <div class="price-amount">
+                                <span class="currency">৳</span>
+                                <span class="amount">৩০</span>
+                            </div>
+                            <div class="price-footer">প্রতি বোতল</div>
+                        </div>
+                        <div class="availability-card">
+                            <div class="availability-icon">✓</div>
+                            <div class="availability-text">
+                                <div class="avail-title">Available Now</div>
+                                <div class="avail-subtitle">RU & RMC সকল হলে</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="cta-group">
+                        <a href="/order" class="cta-button cta-primary">
+                            <span class="btn-icon">🛒</span>
+                            <span>অর্ডার করুন এখনই</span>
+                            <span class="btn-arrow">→</span>
+                        </a>
+                    </div>
                 </div>
-                <div class="hero-image">
-                    <div class="milk-bottles">
-                        <div class="bottle large-bottle">
-                            <div class="bottle-cap"></div>
-                            <div class="bottle-body"></div>
-                            <div class="bottle-label">MEALKY<br>WAY</div>
+                <div class="hero-visual">
+                    <div class="visual-wrapper">
+                        <div class="glow-effect"></div>
+                        <div class="bottles-image-container">
+                            <img src="bottles.png" alt="Mealky Way Milk Bottles" class="bottles-image">
                         </div>
-                        <div class="bottle small-bottle">
-                            <div class="bottle-cap"></div>
-                            <div class="bottle-body"></div>
-                            <div class="bottle-label">MEALKY<br>WAY</div>
+                        <div class="floating-elements">
+                            <div class="float-element element-1">🥛</div>
+                            <div class="float-element element-2">✨</div>
+                            <div class="float-element element-3">💧</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="hero-wave"></div>
+        <div class="hero-curve">
+            <svg viewBox="0 0 1440 120" xmlns="http://www.w3.org/2000/svg">
+                <path fill="#ffffff" d="M0,64L80,69.3C160,75,320,85,480,80C640,75,800,53,960,48C1120,43,1280,53,1360,58.7L1440,64L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z"></path>
+            </svg>
+        </div>
     </section>
 
     <!-- Features Section -->
@@ -116,38 +161,6 @@
         </div>
     </section>
 
-    <!-- Contact Section -->
-    <section class="contact-section">
-        <div class="container">
-            <div class="contact-content">
-                <div class="qr-section">
-                    <h3>অর্ডার করতে স্ক্যান করুন</h3>
-                    <div class="qr-placeholder">
-                        <div class="qr-box">
-                            <p>📱</p>
-                            <p>QR Code</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="contact-info">
-                    <h3>যোগাযোগ</h3>
-                    <div class="contact-item">
-                        <span class="contact-icon">📞</span>
-                        <span>01703770715</span>
-                    </div>
-                    <div class="contact-item">
-                        <span class="contact-icon">📞</span>
-                        <span>01568088468</span>
-                    </div>
-                    <div class="contact-item">
-                        <span class="contact-icon">🌐</span>
-                        <span>@mealkyway.netlify.app</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -161,7 +174,6 @@
                     <ul>
                         <li><a href="/">Home</a></li>
                         <li><a href="/order">Order Now</a></li>
-                        <li><a href="/admin">Admin Panel</a></li>
                     </ul>
                 </div>
                 <div class="footer-contact">
