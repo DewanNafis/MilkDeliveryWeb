@@ -276,7 +276,7 @@ app.get('/api/admin/orders', async (req, res) => {
 
     const { date, institution, hall, customer } = req.query;
 
-    // Build query
+    // Build query with sorting by date and ID descending
     let query = supabase
       .from('orders')
       .select(`
@@ -289,7 +289,7 @@ app.get('/api/admin/orders', async (req, res) => {
           room
         )
       `)
-      .order('date', { ascending: false })
+      .order('created_at', { ascending: false })
       .order('id', { ascending: false });
 
     // Apply filters

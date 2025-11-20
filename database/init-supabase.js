@@ -9,7 +9,7 @@ async function initSupabase() {
     const { data: existingAdmin, error: checkError } = await supabase
       .from('admin_users')
       .select('username')
-      .eq('username', 'admin')
+      .eq('username', 'milkyway21')
       .maybeSingle();
 
     if (checkError && checkError.code !== 'PGRST116') {
@@ -21,12 +21,12 @@ async function initSupabase() {
     } else {
       // Create default admin user
       console.log('Creating default admin user...');
-      const passwordHash = await bcrypt.hash('admin123', 10);
+      const passwordHash = await bcrypt.hash('21milkadmins', 10);
       
       const { error: insertError } = await supabase
         .from('admin_users')
         .insert([{ 
-          username: 'admin', 
+          username: 'milkyway21', 
           password_hash: passwordHash 
         }]);
 
