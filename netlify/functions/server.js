@@ -479,21 +479,19 @@ app.delete('/api/admin/orders/:id', isAuthenticated, async (req, res) => {
 
 // ==================== NOTICE APIs ====================
 
-// Path to notice file
-const NOTICE_FILE = path.join(__dirname, '../../data/notice.json');
-
-// Ensure data directory exists
-const dataDir = path.join(__dirname, '../../data');
-if (!fs.existsSync(dataDir)) {
-  fs.mkdirSync(dataDir, { recursive: true });
-}
+// Path to notice file - use /tmp for Netlify serverless
+const NOTICE_FILE = path.join('/tmp', 'notice.json');
 
 // Initialize notice file if it doesn't exist
 if (!fs.existsSync(NOTICE_FILE)) {
-  fs.writeFileSync(NOTICE_FILE, JSON.stringify({ 
-    content: 'Welcome to Milky Way! 🥛 Fresh milk delivery available daily to all RU and RMC halls!',
-    updated_at: new Date().toISOString()
-  }));
+  try {
+    fs.writeFileSync(NOTICE_FILE, JSON.stringify({ 
+      content: 'Welcome to Milky Way! 🥛 Fresh milk delivery available daily to all RU and RMC halls!',
+      updated_at: new Date().toISOString()
+    }));
+  } catch (err) {
+    console.error('Failed to create notice file:', err);
+  }
 }
 
 // Get current notice
