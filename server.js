@@ -523,7 +523,9 @@ app.get('/api/notice', async (req, res) => {
 
     if (error && error.code !== 'PGRST116') {
       console.error('Notice fetch error:', error);
-      return res.status(500).json({ error: 'Failed to fetch notice' });
+      console.error('Error code:', error.code);
+      console.error('Error message:', error.message);
+      return res.status(500).json({ error: 'Failed to fetch notice. Table may not exist.' });
     }
 
     res.json({ notice: data?.content || '' });
@@ -538,29 +540,47 @@ app.put('/api/admin/notice', isAuthenticated, async (req, res) => {
   try {
     const { content } = req.body;
 
+    console.log('Updating notice with content:', content);
+
     // Get the current notice ID or create a new one
-    const { data: existing } = await supabase
+    const { data: existing, error: fetchError } = await supabase
       .from('notices')
       .select('id')
       .order('id', { ascending: false })
       .limit(1)
       .single();
 
+    console.log('Existing notice:', existing);
+    console.log('Fetch error:', fetchError);
+
     let result;
     if (existing) {
+      console.log('Updating existing notice with ID:', existing.id);
       result = await supabase
         .from('notices')
         .update({ content, updated_at: new Date().toISOString() })
-        .eq('id', existing.id);
+        .eq('id', existing.id)
+        .select();
     } else {
+      console.log('Creating new notice');
       result = await supabase
         .from('notices')
-        .insert({ content });
+        .insert({ content })
+        .select();
     }
+
+    console.log('Update/Insert result:', result);
 
     if (result.error) {
       console.error('Notice update error:', result.error);
-      return res.status(500).json({ error: 'Failed to update notice' });
+      console.error('Error code:', result.error.code);
+      console.error('Error message:', result.error.message);
+      console.error('Error details:', result.error.details);
+      return res.status(500).json({ 
+        error: 'Failed to update notice', 
+        details: result.error.message,
+        hint: result.error.hint || 'Make sure the notices table exists in Supabase'
+      });
     }
 
     res.json({ success: true, message: 'Notice updated successfully' });

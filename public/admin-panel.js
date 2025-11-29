@@ -604,7 +604,15 @@ async function updateNotice() {
         if (response.ok && data.success) {
             showToast('✅ Notice updated successfully!', 'success');
         } else {
-            showToast('❌ ' + (data.error || 'Failed to update notice'), 'error');
+            console.error('Notice update failed:', data);
+            let errorMsg = data.error || 'Failed to update notice';
+            if (data.hint) {
+                errorMsg += '. ' + data.hint;
+            }
+            if (data.details) {
+                console.error('Error details:', data.details);
+            }
+            showToast('❌ ' + errorMsg, 'error');
         }
     } catch (error) {
         console.error('Error updating notice:', error);
